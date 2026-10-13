@@ -2,8 +2,8 @@
 
 ## Unreleased
 
+- Add a direct Twitch sign-in fallback below the Continue button, with a copyable URL and support for manually entered pairing codes.
 - Fix the Twitch sign-in button being blocked by the page policy in Chromium browsers, including Twitch's login redirect.
-
 - A minimal `hosting` branch for Falix, automatically refreshed after passing checks on each main push.
 - A public-hosting launcher that loads private `.env` settings, binds all interfaces, and uses the assigned Falix port.
 - Hosting export and startup checks, plus a Falix deployment guide.

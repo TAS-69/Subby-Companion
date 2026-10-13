@@ -4,6 +4,8 @@ Checked on 13 October 2026 with Node.js 24.11.1. This is a service preview for S
 
 The current main branch adds three hosting checks to the 12 service checks below. They verify an exact runtime-only export, rejection of overlapping/nonempty output directories, private `.env` loading, the assigned Falix port and public binding, an actual HTTP health response, and startup refusal with missing settings or public HTTP. The first published 0.1.0 source bundle contains the original 12 service tests.
 
+Two additional sign-in checks bring the current total to 17. They exercise the direct Twitch fallback from a prefilled pairing link, a manually typed code without a form redirect, browser-bound OAuth state, rejection of cross-origin submissions, expired codes, no credentials in the displayed URL, and explicit channel confirmation before linking.
+
 All 12 automated tests pass. Coverage includes minimal default scopes, event normalization, encrypted SQLite storage, wrong-key rejection, durable duplicate suppression, restart replay, browser cookies and CSRF checks, explicit channel confirmation, authenticated WebSocket isolation, and a local EventSub socket.
 
 Additional checks cover current-subscriber recovery, moderator chat permissions, duplicate chat handling, concurrent token refresh and validation, preserving scopes across installations, keeping subscription delivery running during optional permission approval, channel fencing, and saving events without waiting for slow chat replies.

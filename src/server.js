@@ -41,10 +41,16 @@ export function createCompanion(store, config, twitch) {
     if (!value || input.csrf !== hash(value) || request.headers.origin !== base.origin) throw new Error('This page expired. Open the pairing link again.');
     return value;
   }
-  function authorize(response, state, events) {
+  function authorizationUrl(state, events) {
     const location = new URL('https://id.twitch.tv/oauth2/authorize');
     location.search = new URLSearchParams({ response_type: 'code', client_id: config.clientId, redirect_uri: base.origin + '/oauth/callback', scope: scopes(events).join(' '), state, force_verify: 'true' });
-    response.writeHead(303, { Location: location.toString() }); response.end();
+    return location.toString();
+  }
+  function authorize(response, state, events) {
+    response.writeHead(303, { Location: authorizationUrl(state, events) }); response.end();
+  }
+  function fallbackLinks(location) {
+    return `<a id="twitch-fallback" class="button secondary" href="${escape(location)}">Click here if redirect doesn’t work</a><details class="redirect-details"><summary>Show Twitch sign-in URL</summary><label for="twitch-url">Twitch sign-in URL</label><textarea id="twitch-url" readonly rows="5" spellcheck="false">${escape(location)}</textarea><p class="muted">Use this link in the same browser. To switch browsers, open your Minecraft pairing link there first.</p></details>`;
   }
   const server = createServer(async (request, response) => {
     response.setHeader('Cache-Control', 'no-store');
@@ -76,7 +82,10 @@ export function createCompanion(store, config, twitch) {
         const nonce = secret(); cookie(response, nonce);
         const pair = inputCode ? store.pairing(inputCode) : null;
         const introduction = pair ? `<p>Link Twitch to <strong>${escape(pair.label)}</strong>. Match this code to the one shown in Minecraft.</p><div class="code">${escape(inputCode.toUpperCase())}</div>` : '<p>Enter the private pairing code shown in Minecraft. Codes expire after ten minutes.</p>';
-        return html(response, 'Connect your Twitch account', `${introduction}<form method="post" action="/oauth/start"><input type="hidden" name="csrf" value="${hash(nonce)}"><label for="code">Minecraft pairing code</label><input id="code" name="code" required maxlength="11" value="${escape(inputCode)}" autocomplete="off" spellcheck="false"><button>Continue with Twitch</button></form><p class="muted">Only link an installation you control. Anyone managing that Minecraft installation can read the events you allow.</p>`);
+        const fallback = pair
+          ? fallbackLinks(authorizationUrl(store.beginOAuth(pair, nonce), [...new Set([...JSON.parse(pair.events), ...(pair.channel ? store.events(pair.channel) : [])])]))
+          : '<button class="secondary" type="submit" name="manual" value="1">Click here if redirect doesn’t work</button>';
+        return html(response, 'Connect your Twitch account', `${introduction}<form method="post" action="/oauth/start"><input type="hidden" name="csrf" value="${hash(nonce)}"><label for="code">Minecraft pairing code</label><input id="code" name="code" required maxlength="11" value="${escape(inputCode)}" autocomplete="off" spellcheck="false"${pair ? ' readonly' : ''}><button>Continue with Twitch</button>${fallback}</form><p class="muted">Only link an installation you control. Anyone managing that Minecraft installation can read the events you allow.</p>`);
       }
       if (url.pathname === '/oauth/start' && request.method === 'POST') {
         rate(request, 'oauth', 20);
@@ -84,6 +93,7 @@ export function createCompanion(store, config, twitch) {
         if (!pair) throw new Error('That pairing code expired or was not found. Run /subby connect again.');
         const events = [...new Set([...JSON.parse(pair.events), ...(pair.channel ? store.events(pair.channel) : [])])];
         const state = store.beginOAuth(pair, nonce);
+        if (input.manual === '1') return html(response, 'Open Twitch sign-in', `<p>Your pairing code is ready. Open the direct link below to continue with Twitch.</p>${fallbackLinks(authorizationUrl(state, events))}`);
         authorize(response, state, events); return;
       }
       if (url.pathname === '/oauth/callback' && request.method === 'GET') {
