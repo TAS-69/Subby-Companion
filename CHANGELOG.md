@@ -2,10 +2,10 @@
 
 ## 0.1.1
 
-- Stable release with maintainer-confirmed Twitch pairing and console simulation reaching the Minecraft book on Falix.
+- I verified Twitch pairing and console simulation reaching the Minecraft book on Falix for this stable release.
 - Shared hosted launcher available on main through `npm run start:hosted`; the hosting branch uses the same runtime code.
 - Simple README with a 256px logo, detailed guides in the wiki, and a dedicated hosting README with environment setup.
-- Explicit host selection before Minecraft pairing, self-hosting expectations, and the maintainer's test/development address without reliability assurances.
+- Explicit host selection before Minecraft pairing, self-hosting expectations, and my test/development address without reliability assurances.
 - Updated copyright to TAS-69.
 
 - Add Falix console commands to list linked channels and installations and send a marked test subscription through normal Minecraft delivery, including offline buffering.

@@ -52,7 +52,7 @@ Open `https://YOUR-COMPANION-HOST/health`; it should return `{"status":"ok","pro
 
 In Minecraft, **change Companion address first** under `/subby` → **Advanced → Connection settings**. Then run `/subby connect`, sign in and confirm the channel.
 
-> [subby.falix.org](https://subby.falix.org) is the maintainer's **test/development server**, with **no assurances of reliability**. **Self-hosting is expected.** Use your own host for your deployment's base URL.
+> I host [subby.falix.org](https://subby.falix.org) for **development and testing only**, with **no assurances of reliability**. **Self-hosting is expected.** Use your own host for your deployment's base URL.
 
 [Console tests](https://github.com/TAS-69/Subby-Companion/wiki/Console-commands) · [Troubleshooting](https://github.com/TAS-69/Subby-Companion/wiki/Troubleshooting) · [Delivery limits](https://github.com/TAS-69/Subby-Companion/wiki/Delivery-and-recovery)
 

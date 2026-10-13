@@ -20,7 +20,7 @@ Companion handles Twitch sign-in and sends subscriber events to [Subby](https://
 2. **Change the host before pairing:** in Minecraft, open `/subby` → **Advanced → Connection settings → Companion address** and enter your Companion URL.
 3. **Run `/subby connect`**, follow the browser link, sign in with Twitch and confirm your channel.
 
-> **Test/development server:** [subby.falix.org](https://subby.falix.org) is the maintainer's test server, with **no assurances of reliability**. **Self-hosting is expected.** It is not a production hosting service. The default `localhost` address must be changed unless Companion runs on the same computer as Minecraft.
+> **Development server:** I host [subby.falix.org](https://subby.falix.org) for development and testing only, with **no assurances of reliability**. **Self-hosting is expected.** It is not a production hosting service. The default `localhost` address must be changed unless Companion runs on the same computer as Minecraft.
 
 ## What you get
 
