@@ -1,6 +1,7 @@
 import { Store } from './store.js';
 import { Twitch } from './twitch.js';
 import { createCompanion } from './server.js';
+import { createConsole } from './console.js';
 
 const config = {
   baseUrl: process.env.SUBBY_BASE_URL ?? 'http://localhost:3030',
@@ -12,6 +13,7 @@ const store = new Store(process.env.SUBBY_DATA_DIR ?? './data', process.env.SUBB
 let app;
 const twitch = new Twitch(store, config, channel => app.notify(channel));
 app = createCompanion(store, config, twitch);
+const operatorConsole = createConsole(store, app, { stop });
 const port = Number(process.env.SUBBY_PORT ?? 3030);
 if (!Number.isSafeInteger(port) || port < 1 || port > 65535) throw new Error('SUBBY_PORT must be between 1 and 65535.');
 app.server.listen(port, process.env.SUBBY_HOST ?? '127.0.0.1', () => {
@@ -21,6 +23,7 @@ app.server.listen(port, process.env.SUBBY_HOST ?? '127.0.0.1', () => {
 let stopping = false;
 async function stop() {
   if (stopping) return; stopping = true;
+  operatorConsole.close();
   await Promise.all([twitch.close(), app.close()]); store.close();
 }
 process.on('SIGTERM', stop); process.on('SIGINT', stop);

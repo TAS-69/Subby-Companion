@@ -212,5 +212,5 @@ export function createCompanion(store, config, twitch) {
     for (const [id, entry] of rates) if (entry.reset < Date.now()) rates.delete(id);
   }, 30000);
   heartbeat.unref();
-  return { server, notify, close: async () => { clearInterval(heartbeat); for (const ws of clients.values()) ws.terminate(); sockets.close(); await new Promise(resolve => server.close(resolve)); await Promise.allSettled(recoveries.values()); } };
+  return { server, notify, connected: id => clients.get(id)?.readyState === WebSocket.OPEN, close: async () => { clearInterval(heartbeat); for (const ws of clients.values()) ws.terminate(); sockets.close(); await new Promise(resolve => server.close(resolve)); await Promise.allSettled(recoveries.values()); } };
 }
