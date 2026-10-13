@@ -1,9 +1,9 @@
 {
   "name": "subby-companion",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "private": true,
   "type": "module",
   "engines": { "node": ">=24.0.0" },
-  "scripts": { "start": "node src/main.js", "test": "node --test test/*.test.js" },
+  "scripts": { "start": "node src/main.js", "start:hosted": "node index.js", "test": "node --test test/*.test.js" },
   "dependencies": { "ws": "8.22.0" }
 }

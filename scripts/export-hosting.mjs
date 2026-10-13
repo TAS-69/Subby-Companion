@@ -21,8 +21,8 @@ export function exportHosting(source, destination) {
       cpSync(input, target);
     }
   }
-  for (const name of ['src', 'web', 'LICENSE', '.gitignore', 'package-lock.json']) copy(name);
-  copy('hosting/index.js', 'index.js'); copy('hosting/.env.example', '.env.example');
+  for (const name of ['src', 'web', 'index.js', 'Subby-logo.png', 'LICENSE', '.gitignore', 'package-lock.json']) copy(name);
+  copy('hosting/README.md', 'README.md'); copy('hosting/.env.example', '.env.example');
   const manifest = JSON.parse(readFileSync(join(source, 'package.json'), 'utf8'));
   manifest.scripts = { start: 'node index.js' };
   delete manifest.devDependencies;

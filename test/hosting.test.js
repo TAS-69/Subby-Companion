@@ -30,7 +30,10 @@ test('hosting export includes only runtime files and excludes development script
   const directory = temporary();
   try {
     exportHosting(source, directory);
-    assert.deepEqual(files(directory), ['.env.example', '.gitignore', 'LICENSE', 'index.js', 'package-lock.json', 'package.json', 'src/catalog.js', 'src/console.js', 'src/main.js', 'src/server.js', 'src/store.js', 'src/twitch.js', 'web/style.css'].sort());
+    assert.deepEqual(files(directory), ['.env.example', '.gitignore', 'LICENSE', 'README.md', 'Subby-logo.png', 'index.js', 'package-lock.json', 'package.json', 'src/catalog.js', 'src/console.js', 'src/main.js', 'src/server.js', 'src/store.js', 'src/twitch.js', 'web/style.css'].sort());
+    assert.equal(readFileSync(join(directory, 'index.js'), 'utf8'), readFileSync(join(source, 'index.js'), 'utf8'));
+    const readme = readFileSync(join(directory, 'README.md'), 'utf8');
+    assert.match(readme, /width="256"/); assert.match(readme, /SUBBY_BASE_URL/); assert.match(readme, /Falix is not a sponsor/);
     assert.deepEqual(JSON.parse(readFileSync(join(directory, 'package.json'))).scripts, { start: 'node index.js' });
     assert.equal(JSON.parse(readFileSync(join(directory, 'package.json'))).devDependencies, undefined);
     assert.match(readFileSync(join(directory, '.env.example'), 'utf8'), /^SUBBY_BASE_URL=\s*$/m);
