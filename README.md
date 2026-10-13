@@ -24,11 +24,15 @@ Companion handles Twitch sign-in and sends subscriber events to [Subby](https://
 
 ## What you get
 
+<div align="center">
+  
 | By default | When enabled in Advanced |
 | --- | --- |
 | Subs, gift recipients and shared resubs | Extra Twitch events and chat controls |
 | Private browser pairing | Current active subscriber recovery |
 | Buffered delivery while Minecraft is offline | Additional Twitch permission scopes |
+
+</div>
 
 One service can connect multiple independently authorized channels. Optional chat speaks as the broadcaster; a separate bot account is not included.
 
