@@ -1,0 +1,15 @@
+services:
+  companion:
+    build: .
+    restart: unless-stopped
+    env_file: .env
+    environment:
+      SUBBY_HOST: 0.0.0.0
+      SUBBY_PORT: 3030
+      SUBBY_DATA_DIR: /app/data
+    ports:
+      - "127.0.0.1:3030:3030"
+    volumes:
+      - subby-data:/app/data
+volumes:
+  subby-data:
