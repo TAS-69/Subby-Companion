@@ -59,6 +59,21 @@ The optional chat interface requires the `bot` event permission and an authentic
 
 `!subby pause`, `!subby resume`, `!subby status`, and `!subby lastsub` require broadcaster or moderator badges from Twitch EventSub. `!book` and `!supporters` provide public explanations. Pause and resume control optional Minecraft effects; subscription names continue recording. Chat messages are never used to infer subscriptions.
 
+## Test from the Falix console
+
+Deploy the latest `hosting` branch and restart Companion. Enter these commands directly in the Falix console, replacing `YOUR_TWITCH_USERNAME` with the connected streamer's Twitch username:
+
+```text
+subby channels
+subby test sub YOUR_TWITCH_USERNAME TestViewer
+```
+
+The second command sends a simulated Tier 1 subscription through the normal delivery buffer. Minecraft records **[TEST] TestViewer** in its subscriber book and history. Any matching optional rules run with their usual safety settings and cooldowns. Offline Minecraft installations receive the event when they reconnect. This does not create or purchase a Twitch subscription or contact Twitch to generate an event.
+
+If exactly one Twitch channel is linked, `subby test sub` uses that channel and the default name `TestViewer`. For another tier, use `subby test sub YOUR_TWITCH_USERNAME TestViewer 3`. A Twitch username targets all of its linked Minecraft installations; use an installation ID from `subby channels` in its place to test only that installation. `subby help` lists the commands.
+
+This is a recorded test entry. Hide its name from the current Minecraft book with `/subby remove subby_test_testviewer`. The private journal and existing archive copies retain their history. Minecraft's own local effect preview is separate.
+
 ## Delivery limits
 
 Unacknowledged deliveries are retained across restarts, with a limit of 100,000 pending events per installation. A full buffer stops intake for that channel and reports the problem; reconnect Minecraft promptly. Acknowledged deliveries and service duplicate IDs are retained for 30 days. Minecraft also keeps its own durable duplicate IDs.
@@ -67,6 +82,6 @@ The buffer covers Minecraft outages while the Companion remains connected to Twi
 
 ## Verification
 
-Run `npm test`. The 12 original service tests cover browser session and CSRF checks, explicit pairing confirmation, encrypted storage, restart recovery, authenticated WebSocket replay and isolation, and a local EventSub socket with duplicate notifications. Three hosting tests check the runtime export, Falix startup and private settings, and rejection of incomplete or insecure configuration. Two sign-in fallback tests cover direct links, typed codes, browser-bound state, expiry, and explicit channel confirmation. A real Twitch account and a real Minecraft gameplay session are still needed for end-to-end acceptance. [Validation details](VALIDATION.md) · [Release notes](CHANGELOG.md)
+Run `npm test`. The 19 tests include the 12 original service checks for browser session and CSRF protection, explicit pairing confirmation, encrypted storage, restart recovery, authenticated WebSocket replay and isolation, and a local EventSub socket with duplicate notifications. Three hosting tests check the runtime export, Falix startup and private settings, console input and shutdown, and rejection of incomplete or insecure configuration. Two sign-in fallback tests cover direct links, typed codes, browser-bound state, expiry, and explicit channel confirmation. Two console tests check simulated delivery, acknowledgements, offline persistence, channel and installation targeting, and input validation. A real Twitch account and a real Minecraft gameplay session are still needed for end-to-end acceptance. [Validation details](VALIDATION.md) · [Release notes](CHANGELOG.md)
 
 The service uses Node’s built-in SQLite support. Node 24 may print an experimental SQLite warning.

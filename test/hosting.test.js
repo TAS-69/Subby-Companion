@@ -30,7 +30,7 @@ test('hosting export includes only runtime files and excludes development script
   const directory = temporary();
   try {
     exportHosting(source, directory);
-    assert.deepEqual(files(directory), ['.env.example', '.gitignore', 'LICENSE', 'index.js', 'package-lock.json', 'package.json', 'src/catalog.js', 'src/main.js', 'src/server.js', 'src/store.js', 'src/twitch.js', 'web/style.css'].sort());
+    assert.deepEqual(files(directory), ['.env.example', '.gitignore', 'LICENSE', 'index.js', 'package-lock.json', 'package.json', 'src/catalog.js', 'src/console.js', 'src/main.js', 'src/server.js', 'src/store.js', 'src/twitch.js', 'web/style.css'].sort());
     assert.deepEqual(JSON.parse(readFileSync(join(directory, 'package.json'))).scripts, { start: 'node index.js' });
     assert.equal(JSON.parse(readFileSync(join(directory, 'package.json'))).devDependencies, undefined);
     assert.match(readFileSync(join(directory, '.env.example'), 'utf8'), /^SUBBY_BASE_URL=\s*$/m);
@@ -47,7 +47,7 @@ test('hosting launcher loads private settings, honors the Falix port, and serves
     const reservation = createServer(); reservation.listen(0, '127.0.0.1'); await once(reservation, 'listening');
     const port = reservation.address().port; await new Promise(resolve => reservation.close(resolve));
     writeFileSync(join(directory, '.env'), 'SUBBY_BASE_URL=https://subby.example.com\nTWITCH_CLIENT_ID=fixture-client\nTWITCH_CLIENT_SECRET=fixture-secret\nSUBBY_ENCRYPTION_KEY=' + randomBytes(32).toString('base64') + '\nSUBBY_PORT=1\nSUBBY_HOST=192.0.2.1\n');
-    child = spawn(process.execPath, ['index.js'], { cwd: directory, env: { ...environment(), SERVER_PORT: String(port) }, stdio: ['ignore', 'pipe', 'pipe'] });
+    child = spawn(process.execPath, ['index.js'], { cwd: directory, env: { ...environment(), SERVER_PORT: String(port) }, stdio: ['pipe', 'pipe', 'pipe'] });
     const exited = once(child, 'exit'); let output = '';
     child.stdout.on('data', chunk => output += chunk); child.stderr.on('data', chunk => output += chunk);
     const deadline = Date.now() + 10000; let response;
@@ -58,7 +58,15 @@ test('hosting launcher loads private settings, honors the Falix port, and serves
     }
     assert.ok(response?.ok, output); assert.deepEqual(await response.json(), { status: 'ok', protocol: 1 });
     assert.match(output, /Listening/); assert.doesNotMatch(output, /fixture-secret/);
-    child.kill('SIGTERM'); await exited; child = null;
+    child.stdin.write('subby help\n');
+    const consoleDeadline = Date.now() + 3000;
+    while (!output.includes('subby test sub') && Date.now() < consoleDeadline) await new Promise(resolve => setTimeout(resolve, 20));
+    assert.match(output, /subby test sub/);
+    child.stdin.write('stop\n');
+    const stopDeadline = Date.now() + 3000;
+    while (child.exitCode === null && Date.now() < stopDeadline) await new Promise(resolve => setTimeout(resolve, 20));
+    assert.equal(child.exitCode, 0, output); assert.match(output, /stopping Companion/);
+    await exited; child = null;
   } finally { if (child && child.exitCode === null) { const exited = once(child, 'exit'); child.kill('SIGKILL'); await exited; } cleanup(directory); }
 });
 

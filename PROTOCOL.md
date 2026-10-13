@@ -34,6 +34,14 @@ Status frames contain `type: "status"`, `linked`, `approvalRequired`, `channel`,
 
 Control events have `kind: "control"` and `details.command` equal to `pause` or `resume`. They originate only from authenticated broadcaster/moderator chat commands when the bot is opted in. They never carry arbitrary Minecraft commands.
 
+## Operator console simulation
+
+`subby test sub <channel-or-instance-id> [viewer] [tier 1-3]` in the Companion process console queues a normal `kind: "sub"` event. Its display name begins with `[TEST]`, its message ID begins with `console-test-`, and its synthetic user ID begins with `subby-test-`. Details include `login: "subby_test_<viewer>"`, `simulated: "true"`, and `source: "companion_console"`. The same channel and test viewer have a stable synthetic user ID; each command has a fresh message ID.
+
+Existing protocol 1 clients record the entry and apply any matching optional rules with normal safety settings. Delivery, acknowledgements, replay and duplicate handling use the existing protocol. A channel selector targets its linked installations; an installation selector targets only that installation. The channel can be omitted only when exactly one is linked.
+
+Simulation is available only through the trusted host console. There is no public simulation endpoint or Twitch chat simulation command. It does not call Twitch or test Twitch's EventSub source.
+
 ## Removal and optional chat
 
 `POST /v1/unlink` with installation authentication and `{ "instanceId": "..." }` deletes that installation, its outstanding deliveries, and its service sign-in when no other installation uses the account. It does not delete Minecraft’s local book history.

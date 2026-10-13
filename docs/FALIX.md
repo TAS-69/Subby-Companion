@@ -38,4 +38,17 @@ The hosting branch never contains `.env`, saved data, or `node_modules`. Falix d
 
 Start the server and open `https://YOUR-DOMAIN/health`. It should return `{"status":"ok","protocol":1}`. Then set that HTTPS origin under Subby’s **Advanced → Connection settings → Companion address** and run `/subby connect`.
 
+After pairing, test delivery by typing directly into the Falix console:
+
+```text
+subby channels
+subby test sub YOUR_TWITCH_USERNAME TestViewer
+```
+
+Replace `YOUR_TWITCH_USERNAME` with the connected streamer's Twitch username. Minecraft records **[TEST] TestViewer** in the subscriber book and history. Matching optional rules can run with their usual safety settings and cooldowns. No Twitch subscription is created or purchased. The command tests Companion-to-Minecraft delivery; Twitch EventSub intake still needs a real Twitch event.
+
+If only one channel is linked, `subby test sub` is enough. Add `2` or `3` after the viewer name to choose another subscription tier. A channel targets all its linked installations, including offline installations that receive the event on reconnect. To target just one installation, replace the Twitch username with an installation ID shown by `subby channels`. Type `subby help` for help.
+
+Hide the default test name from the current Minecraft book with `/subby remove subby_test_testviewer`. Its private journal entry and existing archive copies remain. After updating the hosting branch, redeploy and restart Companion to load the new console commands.
+
 One service can serve multiple independently authorized streamer channels. This branch uses the existing Companion chat interface, which speaks as the broadcaster; it does not add a dedicated shared bot account or unlimited capacity. Keep the host continuously online and test real Twitch authorization and gameplay before a public launch.

@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- Add Falix console commands to list linked channels and installations and send a marked test subscription through normal Minecraft delivery, including offline buffering.
 - Add a direct Twitch sign-in fallback below the Continue button, with a copyable URL and support for manually entered pairing codes.
 - Fix the Twitch sign-in button being blocked by the page policy in Chromium browsers, including Twitch's login redirect.
 - A minimal `hosting` branch for Falix, automatically refreshed after passing checks on each main push.

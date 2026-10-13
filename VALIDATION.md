@@ -6,7 +6,9 @@ The current main branch adds three hosting checks to the 12 service checks below
 
 Two additional sign-in checks bring the current total to 17. They exercise the direct Twitch fallback from a prefilled pairing link, a manually typed code without a form redirect, browser-bound OAuth state, rejection of cross-origin submissions, expired codes, no credentials in the displayed URL, and explicit channel confirmation before linking.
 
-All 12 automated tests pass. Coverage includes minimal default scopes, event normalization, encrypted SQLite storage, wrong-key rejection, durable duplicate suppression, restart replay, browser cookies and CSRF checks, explicit channel confirmation, authenticated WebSocket isolation, and a local EventSub socket.
+Two console checks bring the current total to 19. They send console input through the normal store and an authenticated local Minecraft WebSocket, acknowledge delivery, preserve an offline installation's event across a store restart, isolate other channels, select an individual installation, preserve synthetic viewer identity, and reject ambiguous targets and invalid input. The hosting startup check also sends console help and stop commands to an exported process and verifies a clean exit.
+
+All 19 automated tests pass. The original service coverage includes minimal default scopes, event normalization, encrypted SQLite storage, wrong-key rejection, durable duplicate suppression, restart replay, browser cookies and CSRF checks, explicit channel confirmation, authenticated WebSocket isolation, and a local EventSub socket.
 
 Additional checks cover current-subscriber recovery, moderator chat permissions, duplicate chat handling, concurrent token refresh and validation, preserving scopes across installations, keeping subscription delivery running during optional permission approval, channel fencing, and saving events without waiting for slow chat replies.
 
