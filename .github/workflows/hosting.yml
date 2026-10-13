@@ -1,0 +1,58 @@
+name: Update hosting branch
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: companion-hosting
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38
+        with:
+          node-version: '24'
+          cache: npm
+      - run: npm ci
+      - run: npm test
+      - name: Export runtime
+        run: node scripts/export-hosting.mjs "$RUNNER_TEMP/subby-hosting"
+      - name: Check production install
+        working-directory: ${{ runner.temp }}/subby-hosting
+        run: npm ci --omit=dev
+      - name: Publish hosting branch
+        env:
+          HOSTING_DIRECTORY: ${{ runner.temp }}/subby-hosting
+          GIT_INDEX_FILE: ${{ runner.temp }}/subby-hosting.index
+          GIT_AUTHOR_NAME: github-actions[bot]
+          GIT_AUTHOR_EMAIL: 41898282+github-actions[bot]@users.noreply.github.com
+          GIT_COMMITTER_NAME: github-actions[bot]
+          GIT_COMMITTER_EMAIL: 41898282+github-actions[bot]@users.noreply.github.com
+        shell: bash
+        run: |
+          set -euo pipefail
+          git fetch origin main
+          if [ "$(git rev-parse origin/main)" != "$GITHUB_SHA" ]; then
+            printf '%s\n' 'A newer main push is queued; leaving hosting for that run.'
+            exit 0
+          fi
+          parent=()
+          if [ -n "$(git ls-remote --heads origin refs/heads/hosting)" ]; then
+            git fetch origin hosting
+            parent=(-p "$(git rev-parse FETCH_HEAD)")
+          fi
+          git read-tree --empty
+          git -C "$HOSTING_DIRECTORY" --git-dir="$GITHUB_WORKSPACE/.git" --work-tree="$HOSTING_DIRECTORY" add --all .
+          tree=$(git write-tree)
+          commit=$(git commit-tree "$tree" "${parent[@]}" -m "Update hosting from ${GITHUB_SHA:0:12}")
+          git push origin "$commit:refs/heads/hosting"

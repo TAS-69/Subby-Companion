@@ -15,7 +15,7 @@ app = createCompanion(store, config, twitch);
 const port = Number(process.env.SUBBY_PORT ?? 3030);
 if (!Number.isSafeInteger(port) || port < 1 || port > 65535) throw new Error('SUBBY_PORT must be between 1 and 65535.');
 app.server.listen(port, process.env.SUBBY_HOST ?? '127.0.0.1', () => {
-  console.log('Subby Companion listening on ' + config.baseUrl);
+  console.log('Subby Companion: Listening on ' + config.baseUrl);
   twitch.maintain().catch(() => console.error('Twitch connection could not start.'));
 });
 let stopping = false;

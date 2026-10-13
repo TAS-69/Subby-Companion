@@ -43,6 +43,8 @@ Use Subby 1.1.0-beta.1 or newer for Companion pairing. Subby 1.0.0 uses direct T
 
 ## Host for multiple streamers
 
+For Falix, use the automatically maintained [hosting branch](https://github.com/TAS-69/Subby-Companion/tree/hosting). It contains only the runtime files and a settings template, with `index.js`, public binding, and the allocated server port already handled. Every passing push to `main` refreshes it. [Falix setup and automatic deployment](docs/FALIX.md)
+
 Set `SUBBY_BASE_URL` to your public HTTPS origin. Put this process behind a reverse proxy that terminates TLS and forwards HTTP and WebSocket upgrades. Keep the process bound to localhost unless your private network requires otherwise. Set the matching Twitch OAuth redirect URL. Restrict access to the database, environment file and backups to the service operator.
 
 Each Minecraft installation connects outward to `/v1/events`; Minecraft does not need an inbound port. Installations are isolated by private credentials. An existing installation cannot silently change its linked Twitch channel. Unlink it first and use a separate Minecraft library for a different channel.
@@ -63,6 +65,6 @@ The buffer covers Minecraft outages while the Companion remains connected to Twi
 
 ## Verification
 
-Run `npm test`. All 12 tests pass, including browser session and CSRF checks, explicit pairing confirmation, encrypted storage, restart recovery, authenticated WebSocket replay and isolation, and a local EventSub socket with duplicate notifications. A real Twitch account and a real Minecraft gameplay session are still needed for end-to-end acceptance. [Validation details](VALIDATION.md) · [Release notes](CHANGELOG.md)
+Run `npm test`. The 12 service tests cover browser session and CSRF checks, explicit pairing confirmation, encrypted storage, restart recovery, authenticated WebSocket replay and isolation, and a local EventSub socket with duplicate notifications. Three additional hosting tests check the runtime export, Falix startup and private settings, and rejection of incomplete or insecure configuration. A real Twitch account and a real Minecraft gameplay session are still needed for end-to-end acceptance. [Validation details](VALIDATION.md) · [Release notes](CHANGELOG.md)
 
 The service uses Node’s built-in SQLite support. Node 24 may print an experimental SQLite warning.

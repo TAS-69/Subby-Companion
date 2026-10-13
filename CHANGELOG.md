@@ -1,5 +1,11 @@
 # Release notes
 
+## Unreleased
+
+- A minimal `hosting` branch for Falix, automatically refreshed after passing checks on each main push.
+- A public-hosting launcher that loads private `.env` settings, binds all interfaces, and uses the assigned Falix port.
+- Hosting export and startup checks, plus a Falix deployment guide.
+
 ## 0.1.0 — service preview
 
 The first standalone Companion release connects Twitch to Subby 1.1.0-beta.1 through browser pairing and an authenticated outbound Minecraft connection.

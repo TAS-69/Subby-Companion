@@ -1,6 +1,8 @@
-# Companion 0.1.0 validation
+# Companion validation
 
 Checked on 13 October 2026 with Node.js 24.11.1. This is a service preview for Subby 1.1.0-beta.1.
+
+The current main branch adds three hosting checks to the 12 service checks below. They verify an exact runtime-only export, rejection of overlapping/nonempty output directories, private `.env` loading, the assigned Falix port and public binding, an actual HTTP health response, and startup refusal with missing settings or public HTTP. The first published 0.1.0 source bundle contains the original 12 service tests.
 
 All 12 automated tests pass. Coverage includes minimal default scopes, event normalization, encrypted SQLite storage, wrong-key rejection, durable duplicate suppression, restart replay, browser cookies and CSRF checks, explicit channel confirmation, authenticated WebSocket isolation, and a local EventSub socket.
 
