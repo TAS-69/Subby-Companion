@@ -72,11 +72,18 @@ test('browser pairing requires matching cookie, CSRF, confirmation and cannot si
   try {
     const pair = await (await post('/v1/pair', { events: [] })).json();
     const page = await fetch(address + '/link?code=' + pair.code), cookie = page.headers.get('set-cookie').split(';')[0];
+    const formSources = response => response.headers.get('content-security-policy').split(';').map(value => value.trim()).find(value => value.startsWith('form-action ')).split(/\s+/).slice(1);
+    assert.deepEqual(formSources(page), ["'self'", 'https://id.twitch.tv', 'https://www.twitch.tv']);
+    assert.match(page.headers.get('content-security-policy'), /default-src 'none'/);
+    assert.match(page.headers.get('content-security-policy'), /frame-ancestors 'none'/);
     const csrf = (await page.text()).match(/name="csrf" value="([a-f0-9]+)"/)[1];
     assert.equal((await post('/oauth/start', { code: pair.code, csrf }, { Cookie: cookie, Origin: 'https://attacker.invalid' })).status, 400);
     const begin = await post('/oauth/start', { code: pair.code, csrf }, { Cookie: cookie, Origin: config.baseUrl });
     assert.equal(begin.status, 303);
     const location = new URL(begin.headers.get('location')), state = location.searchParams.get('state');
+    assert.equal(location.origin, 'https://id.twitch.tv');
+    assert.equal(location.pathname, '/oauth2/authorize');
+    assert.deepEqual(formSources(begin), formSources(page));
     assert.equal(location.searchParams.get('scope'), 'channel:read:subscriptions');
     assert.equal((await fetch(address + '/oauth/callback?state=' + state + '&code=code')).status, 400);
     const callback = await fetch(address + '/oauth/callback?state=' + state + '&code=code', { headers: { Cookie: cookie } });

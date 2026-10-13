@@ -50,7 +50,7 @@ export function createCompanion(store, config, twitch) {
     response.setHeader('Cache-Control', 'no-store');
     response.setHeader('Referrer-Policy', 'no-referrer');
     response.setHeader('X-Content-Type-Options', 'nosniff');
-    response.setHeader('Content-Security-Policy', "default-src 'none'; style-src 'self'; form-action 'self'; frame-ancestors 'none'; base-uri 'none'");
+    response.setHeader('Content-Security-Policy', "default-src 'none'; style-src 'self'; form-action 'self' https://id.twitch.tv https://www.twitch.tv; frame-ancestors 'none'; base-uri 'none'");
     if (secure) response.setHeader('Strict-Transport-Security', 'max-age=31536000');
     try {
       const url = new URL(request.url, base);
