@@ -10,11 +10,19 @@
 
 </div>
 
+<div align="center">
+  
 **Twitch → Companion → Minecraft**
+
+</div>
 
 Companion handles Twitch sign-in and sends subscriber events to [Subby](https://github.com/TAS-69/Subby). Minecraft keeps the book. Twitch passwords and tokens stay outside the game.
 
+<div align="center">
+
 ## Connect in three steps
+
+</div>
 
 1. **Host Companion** with Node.js 24. Use the [hosting branch](https://github.com/TAS-69/Subby-Companion/tree/hosting) for a ready-to-deploy runtime. [Self-hosting guide →](https://github.com/TAS-69/Subby-Companion/wiki/Hosting)
 2. **Change the host before pairing:** in Minecraft, open `/subby` → **Advanced → Connection settings → Companion address** and enter your Companion URL.
@@ -22,9 +30,9 @@ Companion handles Twitch sign-in and sends subscriber events to [Subby](https://
 
 > **Development server:** I host [subby.falix.org](https://subby.falix.org) for development and testing only, with **no assurances of reliability**. **Self-hosting is expected.** It is not a production hosting service. The default `localhost` address must be changed unless Companion runs on the same computer as Minecraft.
 
-## What you get
-
 <div align="center">
+
+## What you get
   
 | By default | When enabled in Advanced |
 | --- | --- |
